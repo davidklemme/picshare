@@ -1,0 +1,10 @@
+node_modules
+.next
+.env*.local
+.env
+*.zip
+temp_sort
+formular_export.csv
+
+__pycache__
+*.py[cod]
