@@ -141,6 +141,12 @@ textarea {
   transform: translateY(-1px);
 }
 
+.primary-button:active:not(:disabled),
+.secondary-button:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
 .primary-button:disabled {
   box-shadow: none;
   cursor: not-allowed;
@@ -161,6 +167,133 @@ textarea {
 }
 
 .success-message {
+  align-items: center;
+  background: #ecfdf3;
+  color: #027a48;
+  display: flex;
+  gap: 10px;
+}
+
+.success-check circle,
+.success-check path {
+  stroke: currentColor;
+}
+
+.success-check circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: draw-success-circle 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.success-check path {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation: draw-success-check 260ms cubic-bezier(0.16, 1, 0.3, 1) 340ms forwards;
+}
+
+.password-match-hint {
+  align-items: center;
+  color: #027a48;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  gap: 6px;
+  margin: -6px 0 0;
+}
+
+.password-match-hint .success-check--small circle {
+  stroke-dasharray: 46;
+  stroke-dashoffset: 46;
+  animation: draw-success-circle 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.password-match-hint .success-check--small path {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: draw-success-check 200ms cubic-bezier(0.16, 1, 0.3, 1) 260ms forwards;
+}
+
+@keyframes draw-success-circle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-success-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success-check circle,
+  .success-check path,
+  .password-match-hint .success-check--small circle,
+  .password-match-hint .success-check--small path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+.empty-state {
+  align-items: center;
+  color: #7c6b56;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 36px 16px;
+  text-align: center;
+}
+
+.empty-state svg {
+  opacity: 0.6;
+}
+
+.empty-state p {
+  margin: 0;
+  max-width: 32ch;
+}
+
+.status-badge {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 750;
+  padding: 6px 14px;
+  transition: transform 160ms ease;
+}
+
+.status-badge:hover {
+  transform: translateY(-1px);
+}
+
+.status-badge--pending {
+  background: #fff7db;
+  border-color: #f7d070;
+  color: #7c4a03;
+}
+
+.status-badge--reviewed {
+  background: #ecfdf3;
+  border-color: #a6e9c4;
+  color: #027a48;
+}
+
+.status-note {
+  align-items: center;
+  border-radius: 16px;
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+}
+
+.status-note--pending {
+  background: #fff7db;
+  color: #7c4a03;
+}
+
+.status-note--reviewed {
   background: #ecfdf3;
   color: #027a48;
 }

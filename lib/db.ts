@@ -1,5 +1,7 @@
 import { Pool } from "pg";
 
+export type SubmissionStatus = "pending" | "reviewed";
+
 export type PhotoSubmission = {
   id: number;
   user_id: string;
@@ -8,6 +10,7 @@ export type PhotoSubmission = {
   phone: string;
   image_numbers: string;
   encrypted_zip_password: string;
+  status: SubmissionStatus;
   created_at: string;
 };
 
@@ -54,6 +57,9 @@ export async function createPhotoSubmissionsTable() {
   // Added after the initial table creation - use ADD COLUMN IF NOT EXISTS
   // rather than a NOT NULL constraint so existing rows aren't broken.
   await getPool().query(`ALTER TABLE photo_submissions ADD COLUMN IF NOT EXISTS phone TEXT`);
+  await getPool().query(
+    `ALTER TABLE photo_submissions ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'pending'`,
+  );
   tableEnsured = true;
 }
 
@@ -75,7 +81,8 @@ export async function insertPhotoSubmission(input: {
         child_name = EXCLUDED.child_name,
         phone = EXCLUDED.phone,
         image_numbers = EXCLUDED.image_numbers,
-        encrypted_zip_password = EXCLUDED.encrypted_zip_password
+        encrypted_zip_password = EXCLUDED.encrypted_zip_password,
+        status = 'pending'
     `,
     [
       input.userId,
@@ -90,6 +97,10 @@ export async function insertPhotoSubmission(input: {
 
 export async function deletePhotoSubmission(id: number) {
   await getPool().query("DELETE FROM photo_submissions WHERE id = $1", [id]);
+}
+
+export async function setSubmissionStatus(id: number, status: SubmissionStatus) {
+  await getPool().query("UPDATE photo_submissions SET status = $1 WHERE id = $2", [status, id]);
 }
 
 export async function getSubmissionForUser(userId: string): Promise<PhotoSubmission | null> {

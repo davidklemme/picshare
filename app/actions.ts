@@ -105,6 +105,7 @@ export async function submitPhotoRequest(
 
   return {
     ok: true,
-    message: "Danke! Deine Fotoauswahl wurde gespeichert. Bitte merke dir dein ZIP-Passwort gut.",
+    message:
+      "Danke! Deine Fotoauswahl wurde gespeichert und wird schnellstmöglich geprüft. Bitte merke dir dein ZIP-Passwort gut.",
   };
 }

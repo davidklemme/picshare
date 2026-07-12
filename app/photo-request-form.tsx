@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { SubmissionStatus } from "@/lib/db";
 import LogoutButton from "./logout-button";
+import SuccessCheck from "./success-check";
 import { SubmissionState, submitPhotoRequest } from "./actions";
 
 const initialState: SubmissionState = { ok: false, message: "" };
@@ -22,12 +24,14 @@ export default function PhotoRequestForm({
   defaultPhone,
   defaultImageNumbers,
   alreadySubmitted,
+  status,
 }: {
   defaultFamilyName: string;
   defaultChildName: string;
   defaultPhone: string;
   defaultImageNumbers: string;
   alreadySubmitted: boolean;
+  status: SubmissionStatus | null;
 }) {
   const [state, formAction] = useFormState(submitPhotoRequest, initialState);
   const [password, setPassword] = useState("");
@@ -47,6 +51,7 @@ export default function PhotoRequestForm({
   }, [password, confirmation]);
 
   const isPasswordInvalid = Boolean(passwordError) || !password || !confirmation;
+  const passwordsMatch = !passwordError && Boolean(password) && Boolean(confirmation);
 
   return (
     <main className="page-shell">
@@ -73,11 +78,16 @@ export default function PhotoRequestForm({
           </p>
         </div>
 
-        {alreadySubmitted ? (
-          <p className="intro">
-            Du hast bereits eine Auswahl eingereicht. Ein erneutes Absenden überschreibt deine
-            bisherige Auswahl und dein bisheriges Passwort.
-          </p>
+        {alreadySubmitted && status ? (
+          <div className={`status-note status-note--${status}`}>
+            {status === "reviewed" ? <SuccessCheck small /> : null}
+            <span>
+              {status === "reviewed"
+                ? "Deine Auswahl wurde geprüft."
+                : "Deine Auswahl ist eingegangen und wird schnellstmöglich geprüft."}{" "}
+              Ein erneutes Absenden überschreibt deine bisherige Auswahl und dein bisheriges Passwort.
+            </span>
+          </div>
         ) : null}
 
         <form action={formAction} className="form">
@@ -157,8 +167,16 @@ export default function PhotoRequestForm({
           </label>
 
           {passwordError ? <p className="error-message">{passwordError}</p> : null}
+          {passwordsMatch ? (
+            <p className="password-match-hint">
+              <SuccessCheck small /> Passwörter stimmen überein
+            </p>
+          ) : null}
           {state.message ? (
-            <p className={state.ok ? "success-message" : "error-message"}>{state.message}</p>
+            <p className={state.ok ? "success-message" : "error-message"}>
+              {state.ok ? <SuccessCheck /> : null}
+              <span>{state.message}</span>
+            </p>
           ) : null}
 
           <SubmitButton disabled={isPasswordInvalid} />
