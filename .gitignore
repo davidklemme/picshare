@@ -8,3 +8,5 @@ formular_export.csv
 
 __pycache__
 *.py[cod]
+.vercel
+*.tsbuildinfo
