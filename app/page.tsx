@@ -25,6 +25,7 @@ export default async function Home() {
       defaultChildName={existing?.child_name ?? ""}
       defaultFamilyName={existing?.family_name ?? ""}
       defaultImageNumbers={existing?.image_numbers ?? ""}
+      defaultPhone={existing?.phone ?? ""}
     />
   );
 }

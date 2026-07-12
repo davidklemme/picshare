@@ -2,8 +2,7 @@
 
 import crypto from "crypto";
 import { headers } from "next/headers";
-import { auth, internalAuth } from "@/lib/auth";
-import { setUserRole } from "@/lib/db";
+import { auth, createUserWithRole } from "@/lib/auth";
 
 export type InviteState = {
   ok: boolean;
@@ -34,10 +33,7 @@ export async function inviteAdmin(
   const temporaryPassword = generateTemporaryPassword();
 
   try {
-    const result = await internalAuth.api.signUpEmail({
-      body: { email, password: temporaryPassword, name },
-    });
-    await setUserRole(result.user.id, "admin");
+    await createUserWithRole({ email, password: temporaryPassword, name, role: "admin" });
   } catch {
     return { ok: false, message: "Einladung fehlgeschlagen. E-Mail eventuell bereits vergeben." };
   }

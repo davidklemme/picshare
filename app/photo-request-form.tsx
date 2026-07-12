@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import LogoutButton from "./logout-button";
 import { SubmissionState, submitPhotoRequest } from "./actions";
 
 const initialState: SubmissionState = { ok: false, message: "" };
@@ -18,11 +19,13 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
 export default function PhotoRequestForm({
   defaultFamilyName,
   defaultChildName,
+  defaultPhone,
   defaultImageNumbers,
   alreadySubmitted,
 }: {
   defaultFamilyName: string;
   defaultChildName: string;
+  defaultPhone: string;
   defaultImageNumbers: string;
   alreadySubmitted: boolean;
 }) {
@@ -48,11 +51,28 @@ export default function PhotoRequestForm({
   return (
     <main className="page-shell">
       <section className="card">
-        <p className="eyebrow">Kita-Foto-Auswahlassistent</p>
-        <h1>Fotoauswahl einreichen</h1>
+        <div className="admin-header">
+          <div>
+            <p className="eyebrow">Kita-Foto-Auswahlassistent</p>
+            <h1>Fotoauswahl einreichen</h1>
+          </div>
+          <LogoutButton />
+        </div>
         <p className="intro">
           Trage deine Kontaktdaten, die gewünschten Bildnummern und ein persönliches ZIP-Passwort ein.
         </p>
+
+        <div className="warning-box">
+          <strong>So funktioniert&apos;s:</strong>
+          <p>
+            Du wählst hier die Bildnummern der gewünschten Fotos deines Kindes aus und vergibst ein
+            eigenes ZIP-Passwort. Deine Auswahl und das (verschlüsselt gespeicherte) Passwort werden
+            genutzt, um dir später ein passwortgeschütztes ZIP mit genau diesen Fotos bereitzustellen.
+            Niemand außer dir kennt dein ZIP-Passwort im Klartext — es wird ausschließlich kurz
+            entschlüsselt, um dein persönliches Foto-Paket zu erstellen.
+          </p>
+        </div>
+
         {alreadySubmitted ? (
           <p className="intro">
             Du hast bereits eine Auswahl eingereicht. Ein erneutes Absenden überschreibt deine
@@ -84,6 +104,17 @@ export default function PhotoRequestForm({
           </label>
 
           <label>
+            Telefonnummer
+            <input
+              defaultValue={defaultPhone}
+              name="phone"
+              placeholder="z. B. 0151 23456789"
+              required
+              type="tel"
+            />
+          </label>
+
+          <label>
             Bildnummern
             <textarea
               defaultValue={defaultImageNumbers}
@@ -96,7 +127,9 @@ export default function PhotoRequestForm({
 
           <div className="warning-box">
             <strong>Wichtig:</strong> Dieses Passwort schützt dein späteres Foto-Paket. Es gibt keine
-            Möglichkeit, das Passwort zurückzusetzen. Bitte gut merken!
+            Möglichkeit, das Passwort zurückzusetzen. Bitte gut merken! Verwende hier bitte ein
+            <strong> einmaliges Passwort</strong>, das du sonst nirgendwo nutzt — nicht dein
+            E-Mail- oder Online-Banking-Passwort.
           </div>
 
           <label>

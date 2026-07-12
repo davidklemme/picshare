@@ -3,6 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, EXPORT_OWNER_EMAIL } from "@/lib/auth";
 import { getAdminUsers, getPhotoSubmissions } from "@/lib/db";
+import LogoutButton from "../logout-button";
+import DeleteSubmissionButton from "./delete-submission-button";
 
 export const dynamic = "force-dynamic";
 
@@ -23,9 +25,12 @@ export default async function AdminPage() {
             <h1>Admin-Nutzer</h1>
             <p className="intro">E-Mail-Adressen werden hier bewusst nicht angezeigt.</p>
           </div>
-          <Link className="secondary-button" href="/admin/invite">
-            Admin einladen
-          </Link>
+          <div style={{ display: "flex", gap: "12px" }}>
+            <Link className="secondary-button" href="/admin/invite">
+              Admin einladen
+            </Link>
+            <LogoutButton />
+          </div>
         </div>
 
         <div className="table-wrapper">
@@ -57,6 +62,7 @@ export default async function AdminPage() {
             <h1>Fotoauswahl-Übersicht</h1>
             <p className="intro">
               Passwörter und E-Mail-Adressen werden in der Tabelle bewusst nicht angezeigt.
+              Telefonnummern sind sichtbar, um Einreichungen mit der Elternliste abzugleichen.
             </p>
           </div>
           {session.user.email === EXPORT_OWNER_EMAIL ? (
@@ -72,9 +78,11 @@ export default async function AdminPage() {
               <tr>
                 <th>Familie</th>
                 <th>Kind</th>
+                <th>Telefon</th>
                 <th>Bildnummern</th>
                 <th>ZIP-Passwort</th>
                 <th>Eingereicht</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -82,14 +90,18 @@ export default async function AdminPage() {
                 <tr key={submission.id}>
                   <td>{submission.family_name}</td>
                   <td>{submission.child_name}</td>
-                  <td>{submission.image_numbers}</td>
+                  <td>{submission.phone}</td>
+                  <td style={{ whiteSpace: "pre-line" }}>{submission.image_numbers}</td>
                   <td aria-label="Passwort verborgen">********</td>
                   <td>{new Date(submission.created_at).toLocaleString("de-DE")}</td>
+                  <td>
+                    <DeleteSubmissionButton familyName={submission.family_name} id={submission.id} />
+                  </td>
                 </tr>
               ))}
               {submissions.length === 0 ? (
                 <tr>
-                  <td colSpan={5}>Noch keine Einreichungen vorhanden.</td>
+                  <td colSpan={7}>Noch keine Einreichungen vorhanden.</td>
                 </tr>
               ) : null}
             </tbody>

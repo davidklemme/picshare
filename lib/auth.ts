@@ -1,8 +1,10 @@
 import { betterAuth } from "better-auth";
-import { Pool } from "pg";
+import { getPool, setUserRole } from "./db";
+
+export type Role = "admin" | "parent";
 
 const sharedConfig = {
-  database: new Pool({ connectionString: process.env.DATABASE_URL }),
+  database: getPool(),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
   user: {
@@ -33,7 +35,20 @@ export const internalAuth = betterAuth({
   emailAndPassword: { enabled: true, disableSignUp: false },
 });
 
-export type Role = "admin" | "parent";
+// Shared by every user-creation path (parent-signup route, admin invite
+// action, seed script) so role assignment can't be forgotten in one of them.
+export async function createUserWithRole(input: {
+  email: string;
+  password: string;
+  name: string;
+  role: Role;
+}) {
+  const result = await internalAuth.api.signUpEmail({
+    body: { email: input.email, password: input.password, name: input.name },
+  });
+  await setUserRole(result.user.id, input.role);
+  return result;
+}
 
 // The CSV export decrypts every family's ZIP password in one shot, so it's
 // deliberately restricted to a single named owner account, not just "any

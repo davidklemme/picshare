@@ -1,5 +1,4 @@
-import { internalAuth } from "../lib/auth";
-import { setUserRole } from "../lib/db";
+import { createUserWithRole } from "../lib/auth";
 
 async function main() {
   const email = process.argv[2];
@@ -11,8 +10,7 @@ async function main() {
     process.exit(1);
   }
 
-  const result = await internalAuth.api.signUpEmail({ body: { email, password, name } });
-  await setUserRole(result.user.id, "admin");
+  await createUserWithRole({ email, password, name, role: "admin" });
   console.log(`Admin created: ${email}`);
   process.exit(0);
 }

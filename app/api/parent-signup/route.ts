@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
-import { internalAuth } from "@/lib/auth";
-import { setUserRole } from "@/lib/db";
+import { createUserWithRole } from "@/lib/auth";
 
 function timingSafeEqual(a: string, b: string): boolean {
   const aBytes = Buffer.from(a);
@@ -39,8 +38,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await internalAuth.api.signUpEmail({ body: { email, password, name: email } });
-    await setUserRole(result.user.id, "parent");
+    await createUserWithRole({ email, password, name: email, role: "parent" });
   } catch {
     return NextResponse.json(
       { message: "Registrierung fehlgeschlagen. E-Mail eventuell bereits vergeben." },

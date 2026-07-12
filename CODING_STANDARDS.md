@@ -31,9 +31,9 @@ function process(user: User | null) {
 }
 ```
 
-### Interfaces over types (for object shapes)
+### Type shapes
 
-Use `interface` for object shapes, `type` for unions/intersections/primitives.
+This codebase consistently uses `type` for object shapes as well as unions/intersections (see `PhotoSubmission`, `AdminUser`, `SubmissionState`, `InviteState`). Keep using `type` for new object shapes rather than mixing in `interface` — consistency matters more than which one.
 
 ## Security Standards
 
