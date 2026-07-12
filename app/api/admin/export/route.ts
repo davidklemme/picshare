@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { decryptZipPassword } from "@/lib/crypto";
 import { getPhotoSubmissions } from "@/lib/db";
 
@@ -6,7 +7,12 @@ function escapeCsv(value: string) {
   return `"${value.replaceAll('"', '""')}"`;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const session = await auth.api.getSession({ headers: request.headers });
+  if (!session || session.user.role !== "admin") {
+    return new NextResponse("Nicht autorisiert.", { status: 401 });
+  }
+
   const submissions = await getPhotoSubmissions();
   const rows = submissions.map((submission) => [
     submission.family_name,

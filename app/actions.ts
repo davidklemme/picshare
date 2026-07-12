@@ -1,6 +1,8 @@
 "use server";
 
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
 import { encryptZipPassword } from "@/lib/crypto";
 import { insertPhotoSubmission } from "@/lib/db";
 
@@ -13,6 +15,11 @@ export async function submitPhotoRequest(
   _previousState: SubmissionState,
   formData: FormData,
 ): Promise<SubmissionState> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session || session.user.role !== "parent") {
+    return { ok: false, message: "Bitte melde dich an." };
+  }
+
   const familyName = String(formData.get("familyName") ?? "").trim();
   const childName = String(formData.get("childName") ?? "").trim();
   const imageNumbers = String(formData.get("imageNumbers") ?? "").trim();
@@ -32,8 +39,15 @@ export async function submitPhotoRequest(
   }
 
   const encryptedZipPassword = encryptZipPassword(zipPassword);
-  await insertPhotoSubmission({ familyName, childName, imageNumbers, encryptedZipPassword });
+  await insertPhotoSubmission({
+    userId: session.user.id,
+    familyName,
+    childName,
+    imageNumbers,
+    encryptedZipPassword,
+  });
   revalidatePath("/admin");
+  revalidatePath("/");
 
   return {
     ok: true,
