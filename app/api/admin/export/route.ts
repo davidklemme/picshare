@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { auth, EXPORT_OWNER_EMAIL } from "@/lib/auth";
 import { decryptZipPassword } from "@/lib/crypto";
 import { getPhotoSubmissions } from "@/lib/db";
 
@@ -11,6 +11,13 @@ export async function GET(request: Request) {
   const session = await auth.api.getSession({ headers: request.headers });
   if (!session || session.user.role !== "admin") {
     return new NextResponse("Nicht autorisiert.", { status: 401 });
+  }
+
+  if (session.user.email !== EXPORT_OWNER_EMAIL) {
+    console.warn(
+      `[export] 🕵️ Busted: admin "${session.user.email}" (id=${session.user.id}) just tried to export every family's decrypted ZIP password. Not today.`,
+    );
+    return new NextResponse("Nicht autorisiert.", { status: 403 });
   }
 
   const submissions = await getPhotoSubmissions();

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, EXPORT_OWNER_EMAIL } from "@/lib/auth";
 import { getAdminUsers, getPhotoSubmissions } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -59,9 +59,11 @@ export default async function AdminPage() {
               Passwörter und E-Mail-Adressen werden in der Tabelle bewusst nicht angezeigt.
             </p>
           </div>
-          <a className="secondary-button" href="/api/admin/export">
-            CSV exportieren
-          </a>
+          {session.user.email === EXPORT_OWNER_EMAIL ? (
+            <a className="secondary-button" href="/api/admin/export">
+              CSV exportieren
+            </a>
+          ) : null}
         </div>
 
         <div className="table-wrapper">
