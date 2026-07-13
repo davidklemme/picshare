@@ -49,8 +49,3 @@ export async function createUserWithRole(input: {
   await setUserRole(result.user.id, input.role);
   return result;
 }
-
-// The CSV export decrypts every family's ZIP password in one shot, so it's
-// deliberately restricted to a single named owner account, not just "any
-// admin". Other invited admins can see the masked overview but not this.
-export const EXPORT_OWNER_EMAIL = "david@berlinersoftwareschmiede.de";

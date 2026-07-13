@@ -13,7 +13,7 @@ export default function LogoutButton() {
   }
 
   return (
-    <button className="secondary-button" onClick={handleLogout} type="button">
+    <button className="ghost-button" onClick={handleLogout} type="button">
       Abmelden
     </button>
   );

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth, EXPORT_OWNER_EMAIL } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { getAdminUsers, getPhotoSubmissions } from "@/lib/db";
 import LogoutButton from "../logout-button";
 import DeleteSubmissionButton from "./delete-submission-button";
@@ -24,7 +24,9 @@ export default async function AdminPage() {
         <div className="admin-header">
           <div>
             <p className="eyebrow">Admin</p>
-            <h1>Admin-Nutzer</h1>
+            <h1>
+              Admin-<em>Nutzer</em>
+            </h1>
             <p className="intro">E-Mail-Adressen werden hier bewusst nicht angezeigt.</p>
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
@@ -61,17 +63,14 @@ export default async function AdminPage() {
         <div className="admin-header">
           <div>
             <p className="eyebrow">Admin</p>
-            <h1>Fotoauswahl-Übersicht</h1>
+            <h1>
+              Fotoauswahl-<em>Übersicht</em>
+            </h1>
             <p className="intro">
               Passwörter und E-Mail-Adressen werden in der Tabelle bewusst nicht angezeigt.
               Telefonnummern sind sichtbar, um Einreichungen mit der Elternliste abzugleichen.
             </p>
           </div>
-          {session.user.email === EXPORT_OWNER_EMAIL ? (
-            <a className="secondary-button" href="/api/admin/export">
-              CSV exportieren
-            </a>
-          ) : null}
         </div>
 
         <div className="table-wrapper">

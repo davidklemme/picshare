@@ -15,7 +15,9 @@ export default async function InviteAdminPage() {
     <main className="page-shell">
       <section className="card">
         <p className="eyebrow">Admin</p>
-        <h1>Admin einladen</h1>
+        <h1>
+          Admin <em>einladen</em>
+        </h1>
         <p className="intro">
           Legt ein neues Admin-Konto mit einem Einmal-Passwort an. Kein Selbst-Signup möglich.
         </p>

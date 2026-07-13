@@ -59,7 +59,9 @@ export default function PhotoRequestForm({
         <div className="admin-header">
           <div>
             <p className="eyebrow">Kita-Foto-Auswahlassistent</p>
-            <h1>Fotoauswahl einreichen</h1>
+            <h1>
+              Fotoauswahl <em>einreichen</em>
+            </h1>
           </div>
           <LogoutButton />
         </div>
