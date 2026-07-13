@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
 }
 
@@ -11,9 +11,11 @@
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 32rem),
-    linear-gradient(135deg, #fff8ed 0%, #f6f2ea 52%, #eef2ff 100%);
-  color: #1f2933;
+    radial-gradient(circle at 6% -8%, rgba(234, 88, 12, 0.32), transparent 38rem),
+    radial-gradient(circle at 104% 6%, rgba(154, 52, 18, 0.2), transparent 34rem),
+    radial-gradient(circle at 16% 118%, rgba(124, 45, 18, 0.16), transparent 38rem),
+    linear-gradient(160deg, #fff3e2 0%, #fdece0 46%, #f6ede2 100%);
+  color: #2b1a0d;
 }
 
 button,
@@ -35,11 +37,13 @@ textarea {
 
 .card {
   width: min(100%, 720px);
-  background: rgba(255, 250, 242, 0.94);
-  border: 1px solid #eadfce;
-  border-radius: 28px;
-  box-shadow: 0 24px 70px rgba(75, 54, 33, 0.14);
-  padding: clamp(24px, 5vw, 40px);
+  background: rgba(255, 250, 242, 0.97);
+  border: 1.5px solid #e8cfa0;
+  border-radius: 32px 32px 32px 8px;
+  box-shadow:
+    0 8px 0 #f4dfae,
+    0 44px 90px rgba(124, 45, 18, 0.24);
+  padding: clamp(28px, 5.5vw, 48px);
 }
 
 .wide-card {
@@ -47,23 +51,36 @@ textarea {
 }
 
 .eyebrow {
-  color: #a15c16;
-  font-size: 0.78rem;
+  background: linear-gradient(135deg, #ea580c, #9a3412);
+  border-radius: 999px;
+  color: #fff8ed;
+  display: inline-block;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
-  margin: 0 0 8px;
+  letter-spacing: 0.14em;
+  margin: 0 0 18px;
+  padding: 6px 14px;
   text-transform: uppercase;
 }
 
 h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  line-height: 1.05;
-  margin: 0 0 12px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.6rem, 8vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  margin: 0 0 14px;
+}
+
+h1 em {
+  color: #c2410c;
+  font-style: italic;
+  font-weight: 600;
 }
 
 .intro {
-  color: #52606d;
-  font-size: 1.05rem;
+  color: #6b5842;
+  font-size: 1.08rem;
   line-height: 1.6;
   margin: 0;
 }
@@ -82,18 +99,18 @@ label {
 
 input,
 textarea {
-  background: #ffffff;
-  border: 1px solid #cbd2d9;
+  background: #fffdf9;
+  border: 1.5px solid #e3cba0;
   border-radius: 14px;
-  color: #1f2933;
+  color: #2b1a0d;
   padding: 13px 14px;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
 input:focus,
 textarea:focus {
-  border-color: #b45309;
-  box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.16);
+  border-color: #c2410c;
+  box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.18);
   outline: none;
 }
 
@@ -103,12 +120,12 @@ textarea {
 }
 
 .warning-box {
-  background: #fff7db;
-  border: 1px solid #f7d070;
-  border-radius: 16px;
-  color: #7c4a03;
+  background: #fff2c6;
+  border: 1.5px solid #f0b429;
+  border-radius: 18px;
+  color: #6b3d02;
   line-height: 1.55;
-  padding: 16px;
+  padding: 18px 20px;
 }
 
 .primary-button,
@@ -118,33 +135,71 @@ textarea {
   cursor: pointer;
   font-weight: 800;
   justify-content: center;
-  padding: 14px 22px;
+  padding: 15px 24px;
   text-decoration: none;
-  transition: opacity 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
 .primary-button {
-  background: #b45309;
-  box-shadow: 0 12px 24px rgba(180, 83, 9, 0.22);
-  color: white;
+  background: linear-gradient(135deg, #f97316 0%, #c2410c 55%, #7c2d12 100%);
+  box-shadow:
+    0 4px 0 #7c2d12,
+    0 20px 40px rgba(124, 45, 18, 0.35);
+  color: #fff8ed;
 }
 
 .secondary-button {
   align-items: center;
-  background: #1f2933;
-  color: white;
+  background: #2b1a0d;
+  box-shadow: 0 4px 0 #140b04;
+  color: #fff8ed;
   display: inline-flex;
 }
 
 .primary-button:hover:not(:disabled),
 .secondary-button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.primary-button:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 #7c2d12,
+    0 8px 20px rgba(124, 45, 18, 0.3);
+  transform: translateY(3px);
+  transition-duration: 60ms;
+}
+
+.secondary-button:active {
+  box-shadow: 0 1px 0 #140b04;
+  transform: translateY(3px);
+  transition-duration: 60ms;
 }
 
 .primary-button:disabled {
   box-shadow: none;
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+/* Quiet utility action (logout) - deliberately recedes instead of competing
+   with real CTAs like "Admin einladen" for attention. */
+.ghost-button {
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: #8a6d4e;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 8px 4px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 140ms ease, text-decoration-color 140ms ease;
+}
+
+.ghost-button:hover {
+  color: #c2410c;
+  text-decoration-color: currentColor;
 }
 
 .error-message,
@@ -161,6 +216,123 @@ textarea {
 }
 
 .success-message {
+  align-items: center;
+  background: #ecfdf3;
+  color: #027a48;
+  display: flex;
+  gap: 10px;
+}
+
+.success-check circle,
+.success-check path {
+  stroke: currentColor;
+}
+
+.success-check circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: draw-success-circle 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.success-check path {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation: draw-success-check 260ms cubic-bezier(0.16, 1, 0.3, 1) 340ms forwards;
+}
+
+.password-match-hint {
+  align-items: center;
+  color: #027a48;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  gap: 6px;
+  margin: -6px 0 0;
+}
+
+.password-match-hint .success-check--small circle {
+  stroke-dasharray: 46;
+  stroke-dashoffset: 46;
+  animation: draw-success-circle 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.password-match-hint .success-check--small path {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: draw-success-check 200ms cubic-bezier(0.16, 1, 0.3, 1) 260ms forwards;
+}
+
+@keyframes draw-success-circle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes draw-success-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.empty-state {
+  align-items: center;
+  color: #7c6b56;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 36px 16px;
+  text-align: center;
+}
+
+.empty-state svg {
+  opacity: 0.6;
+}
+
+.empty-state p {
+  margin: 0;
+  max-width: 32ch;
+}
+
+.status-badge {
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 750;
+  padding: 6px 14px;
+  transition: transform 160ms ease;
+}
+
+.status-badge:hover {
+  transform: translateY(-1px);
+}
+
+.status-badge--pending {
+  background: #fff2c6;
+  border-color: #f0b429;
+  color: #6b3d02;
+}
+
+.status-badge--reviewed {
+  background: #ecfdf3;
+  border-color: #a6e9c4;
+  color: #027a48;
+}
+
+.status-note {
+  align-items: center;
+  border-radius: 16px;
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+}
+
+.status-note--pending {
+  background: #fff2c6;
+  color: #6b3d02;
+}
+
+.status-note--reviewed {
   background: #ecfdf3;
   color: #027a48;
 }
@@ -173,7 +345,7 @@ textarea {
 }
 
 .table-wrapper {
-  border: 1px solid #eadfce;
+  border: 1.5px solid #e8cfa0;
   border-radius: 18px;
   margin-top: 24px;
   overflow-x: auto;
@@ -194,8 +366,8 @@ td {
 }
 
 th {
-  background: #fdf1dc;
-  color: #5f370e;
+  background: #f7dfb0;
+  color: #7c2d12;
   font-size: 0.86rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -205,13 +377,66 @@ tr:last-child td {
   border-bottom: 0;
 }
 
+/* Hero entrance choreography: the direct children of every .card stagger in
+   on load (eyebrow/heading block, intro, warning box, form, ...). Applies
+   uniformly across every page since they all share this one class. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card > * {
+  animation: rise-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.card > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.card > *:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.card > *:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.card > *:nth-child(4) {
+  animation-delay: 210ms;
+}
+
+.card > *:nth-child(5) {
+  animation-delay: 280ms;
+}
+
+.card > *:nth-child(n + 6) {
+  animation-delay: 340ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success-check circle,
+  .success-check path,
+  .password-match-hint .success-check--small circle,
+  .password-match-hint .success-check--small path,
+  .card > * {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .page-shell {
     padding: 18px;
   }
 
   .card {
-    border-radius: 22px;
+    border-radius: 24px 24px 24px 8px;
   }
 
   .admin-header {

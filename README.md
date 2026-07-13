@@ -14,7 +14,7 @@ Next.js-App zum Erfassen von Foto-Wünschen inklusive individuellem ZIP-Passwort
 
 - **Eltern**: Registrieren sich selbst unter `/signup` mit dem geteilten `PARENT_SIGNUP_CODE` (kein Selbst-Signup ohne Code). Nach der Anmeldung reichen sie unter `/` ihre Fotoauswahl ein.
 - **Admins**: Kein Selbst-Signup. Neue Admin-Konten werden ausschließlich von einem bestehenden Admin über `/admin/invite` angelegt.
-- Der CSV-Export (`/admin` → „CSV exportieren“) ist auf ein einzelnes, im Code hinterlegtes Owner-Konto beschränkt (`EXPORT_OWNER_EMAIL` in `lib/auth.ts`). Andere Admins sehen die Übersicht, aber nicht den Export.
+- Es gibt keinen CSV-Export mehr — `scripts/build-zips.ts` liest die Daten direkt aus der DB (siehe unten), damit nirgendwo eine Datei mit entschlüsselten Klartext-Passwörtern entsteht.
 
 ## Datenmodell
 
