@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { SubmissionStatus } from "@/lib/db";
 import LogoutButton from "./logout-button";
@@ -36,18 +36,13 @@ export default function PhotoRequestForm({
   const [state, formAction] = useFormState(submitPhotoRequest, initialState);
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
-  const [passwordError, setPasswordError] = useState("");
 
-  useEffect(() => {
-    if (!password && !confirmation) {
-      setPasswordError("");
-    } else if (password.length > 0 && password.length < 6) {
-      setPasswordError("Das Passwort muss mindestens 6 Zeichen lang sein.");
-    } else if (confirmation && password !== confirmation) {
-      setPasswordError("Die Passwörter stimmen nicht überein.");
-    } else {
-      setPasswordError("");
-    }
+  const passwordError = useMemo(() => {
+    if (!password && !confirmation) return "";
+    if (password.length > 0 && password.length < 6)
+      return "Das Passwort muss mindestens 6 Zeichen lang sein.";
+    if (confirmation && password !== confirmation) return "Die Passwörter stimmen nicht überein.";
+    return "";
   }, [password, confirmation]);
 
   const isPasswordInvalid = Boolean(passwordError) || !password || !confirmation;
