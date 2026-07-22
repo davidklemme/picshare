@@ -1,18 +1,13 @@
 "use server";
 
-import crypto from "crypto";
 import { headers } from "next/headers";
-import { auth, createUserWithRole } from "@/lib/auth";
+import { auth, createUserWithRole, generateTemporaryPassword } from "@/lib/auth";
 
 export type InviteState = {
   ok: boolean;
   message: string;
   temporaryPassword?: string;
 };
-
-function generateTemporaryPassword(): string {
-  return crypto.randomBytes(12).toString("base64url");
-}
 
 export async function inviteAdmin(
   _previousState: InviteState,
