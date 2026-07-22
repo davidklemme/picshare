@@ -2,10 +2,12 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { getAdminUsers, getPhotoSubmissions } from "@/lib/db";
+import { getAdminUsers, getParentUsers, getPhotoSubmissions } from "@/lib/db";
+import { maskEmail } from "@/lib/mask";
 import LogoutButton from "../logout-button";
 import DeleteSubmissionButton from "./delete-submission-button";
 import EmptySubmissions from "./empty-submissions";
+import ResetPasswordButton from "./reset-password-button";
 import StatusBadgeButton from "./status-badge-button";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +18,11 @@ export default async function AdminPage() {
     redirect("/signin");
   }
 
-  const [submissions, adminUsers] = await Promise.all([getPhotoSubmissions(), getAdminUsers()]);
+  const [submissions, adminUsers, parentUsers] = await Promise.all([
+    getPhotoSubmissions(),
+    getAdminUsers(),
+    getParentUsers(),
+  ]);
 
   return (
     <main className="page-shell admin-shell">
@@ -44,6 +50,7 @@ export default async function AdminPage() {
                 <th>Name</th>
                 <th>Rolle</th>
                 <th>Erstellt</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -52,8 +59,59 @@ export default async function AdminPage() {
                   <td>{user.name}</td>
                   <td>{user.role}</td>
                   <td>{new Date(user.created_at).toLocaleString("de-DE")}</td>
+                  <td>
+                    {user.id === session.user.id ? null : (
+                      <ResetPasswordButton label={user.name} userId={user.id} />
+                    )}
+                  </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="card wide-card">
+        <div className="admin-header">
+          <div>
+            <p className="eyebrow">Admin</p>
+            <h1>
+              Eltern-<em>Konten</em>
+            </h1>
+            <p className="intro">
+              E-Mail-Adressen sind maskiert — genug, um ein anrufendes Elternteil zuzuordnen. Ein
+              Zurücksetzen beendet alle Sitzungen des Kontos; das ZIP-Passwort bleibt davon
+              unberührt und kann weiterhin nicht wiederhergestellt werden.
+            </p>
+          </div>
+        </div>
+
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>E-Mail</th>
+                <th>Registriert</th>
+                <th>Einreichung</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {parentUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>{maskEmail(user.email)}</td>
+                  <td>{new Date(user.created_at).toLocaleString("de-DE")}</td>
+                  <td>{user.has_submission ? "Ja" : "Nein"}</td>
+                  <td>
+                    <ResetPasswordButton label={maskEmail(user.email)} userId={user.id} />
+                  </td>
+                </tr>
+              ))}
+              {parentUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={4}>Noch keine Eltern-Konten registriert.</td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>

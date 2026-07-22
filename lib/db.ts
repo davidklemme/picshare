@@ -21,6 +21,13 @@ export type AdminUser = {
   created_at: string;
 };
 
+export type ParentUser = {
+  id: string;
+  email: string;
+  created_at: string;
+  has_submission: boolean;
+};
+
 let pool: Pool | undefined;
 
 // Shared across lib/db.ts and lib/auth.ts (Better Auth's Postgres adapter)
@@ -123,6 +130,21 @@ export async function getPhotoSubmissions(): Promise<PhotoSubmission[]> {
 export async function getAdminUsers(): Promise<AdminUser[]> {
   const result = await getPool().query<AdminUser>(
     `SELECT id, name, role, "createdAt" AS created_at FROM "user" WHERE role = 'admin' ORDER BY "createdAt" ASC`,
+  );
+  return result.rows;
+}
+
+// Parent accounts, for the password reset. Unlike the admin list this needs
+// the e-mail (masked at render time, see maskEmail) — until a family has
+// submitted, it's the only thing an admin can match a caller against.
+export async function getParentUsers(): Promise<ParentUser[]> {
+  await createPhotoSubmissionsTable();
+  const result = await getPool().query<ParentUser>(
+    `SELECT u.id, u.email, u."createdAt" AS created_at, (s.id IS NOT NULL) AS has_submission
+       FROM "user" u
+       LEFT JOIN photo_submissions s ON s.user_id = u.id
+      WHERE u.role = 'parent'
+      ORDER BY u."createdAt" ASC`,
   );
   return result.rows;
 }
