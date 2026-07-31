@@ -11,9 +11,12 @@ export default function SignInPage() {
 
         <SignInForm />
 
-        <p className="intro">
-          Noch keinen Account? <Link href="/signup">Jetzt registrieren</Link>
-        </p>
+        <div className="signup-cta">
+          <p>Noch keinen Account?</p>
+          <Link href="/signup" className="secondary-button">
+            Jetzt registrieren
+          </Link>
+        </div>
       </section>
     </main>
   );
