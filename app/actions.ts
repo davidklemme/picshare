@@ -82,6 +82,20 @@ export async function submitPhotoRequest(
     return { ok: false, message: "Das ZIP-Passwort muss mindestens 6 Zeichen lang sein." };
   }
 
+  const blockedPasswords = [
+    "123456",
+    "1234567",
+    "12345678",
+    "123456789",
+    "password",
+    "passwort",
+    "kitafest",
+    "kitafest@26!",
+  ];
+  if (blockedPasswords.includes(zipPassword.toLowerCase())) {
+    return { ok: false, message: "Bitte wähle ein sichereres Passwort." };
+  }
+
   if (zipPassword !== zipPasswordConfirm) {
     return { ok: false, message: "Die Passwörter stimmen nicht überein." };
   }
