@@ -10,8 +10,31 @@ function safeFolderName(value: string): string {
   return value.trim().replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || "familie";
 }
 
-function extractNumbers(text: string): string[] {
-  return text.match(/\d+/g) ?? [];
+function extractNumbers(text: string): number[] {
+  return (text.match(/\d+/g) ?? []).map(Number);
+}
+
+function findRanges(numbers: number[]): Array<{ min: number; max: number }> {
+  if (numbers.length === 0) return [];
+  const sorted = [...numbers].sort((a, b) => a - b);
+  const ranges: Array<{ min: number; max: number }> = [];
+  let rangeStart = sorted[0];
+  let prev = sorted[0];
+
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] - prev > 1) {
+      ranges.push({ min: rangeStart, max: prev });
+      rangeStart = sorted[i];
+    }
+    prev = sorted[i];
+  }
+  ranges.push({ min: rangeStart, max: prev });
+  return ranges;
+}
+
+function extractFileNumber(filename: string): number | null {
+  const match = filename.match(/(\d+)\.[^.]+$/);
+  return match ? Number(match[1]) : null;
 }
 
 async function main() {
@@ -52,20 +75,47 @@ async function main() {
     mkdirSync(familyTempDir, { recursive: true });
 
     console.log(`[+] Collecting photos for ${familyFolder} (${submission.child_name})...`);
-    let copiedCount = 0;
+    const copiedFiles = new Set<string>();
+    const missingNumbers: number[] = [];
 
+    // First pass: exact matches
     for (const number of requestedNumbers) {
+      const numStr = String(number);
       const found = sourceFiles.find(
         (name) =>
-          name.includes(number) && SUPPORTED_EXTENSIONS.includes(path.extname(name).toLowerCase()),
+          name.includes(numStr) && SUPPORTED_EXTENSIONS.includes(path.extname(name).toLowerCase()),
       );
-      if (found) {
+      if (found && !copiedFiles.has(found)) {
         copyFileSync(path.join(sourceDir, found), path.join(familyTempDir, found));
-        copiedCount++;
-      } else {
-        console.log(`    [!] Number ${number} not found.`);
+        copiedFiles.add(found);
+      } else if (!found) {
+        missingNumbers.push(number);
       }
     }
+
+    // Second pass: range-based fallback for missing numbers
+    if (missingNumbers.length > 0) {
+      const ranges = findRanges(missingNumbers);
+      for (const range of ranges) {
+        const rangeFiles = sourceFiles.filter((name) => {
+          if (!SUPPORTED_EXTENSIONS.includes(path.extname(name).toLowerCase())) return false;
+          const fileNum = extractFileNumber(name);
+          return fileNum !== null && fileNum >= range.min && fileNum <= range.max;
+        });
+        for (const file of rangeFiles) {
+          if (!copiedFiles.has(file)) {
+            copyFileSync(path.join(sourceDir, file), path.join(familyTempDir, file));
+            copiedFiles.add(file);
+            console.log(`    [~] Range fallback: ${file} (for ${range.min}-${range.max})`);
+          }
+        }
+        if (rangeFiles.length === 0) {
+          console.log(`    [!] No files in range ${range.min}-${range.max}`);
+        }
+      }
+    }
+
+    const copiedCount = copiedFiles.size;
 
     if (copiedCount === 0) {
       console.log("    [-] No photos found. Skipping ZIP.");
